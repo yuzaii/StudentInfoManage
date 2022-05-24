@@ -1,0 +1,2 @@
+# StudentInfoManage
+基于abp框架开发的学生信息管理系统
