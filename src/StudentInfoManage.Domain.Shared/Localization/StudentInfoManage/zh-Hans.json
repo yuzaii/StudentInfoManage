@@ -1,0 +1,30 @@
+{
+    "culture": "zh-Hans",
+    "texts": {
+      "Menu:Home": "首页",
+      "Welcome": "欢迎",
+      "LongWelcomeMessage": "欢迎来到该应用程序. 这是一个基于ABP框架的启动项目. 有关更多信息, 请访问 abp.io.",
+      "Menu:StudentInfoManage": "学生信息管理系统",
+      "Menu:Students": "学生信息",
+      "StudentsInfo": "学生信息管理",
+      "NewStudent": "添加学生",
+      "Actions": "操作",
+      "Close": "关闭",
+      "Delete": "删除",
+      "Edit": "编辑",
+      "Name": "姓名",
+      "Major": "专业",
+      "Grade": "年级",
+      "Class": "班级",
+      "BirthDate": "出生日期",
+      "CreationTime": "创建时间",
+      "AreYouSure": "Are you sure?",
+      "AreYouSureToDelete": "Are you sure you want to delete this item?",
+      "Enum:Major:0": "未选择",
+      "Enum:Major:1": "软件工程",
+      "Enum:Major:2": "计算机科学",
+      "Enum:Major:3": "机械工程",
+      "Enum:Major:4": "文学",
+      "Enum:Major:5": "化学"
+    }
+  }

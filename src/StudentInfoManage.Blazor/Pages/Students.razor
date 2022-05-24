@@ -1,0 +1,231 @@
+﻿@page "/Students"
+@using Volo.Abp.Application.Dtos
+@using StudentInfoManage.Students
+@using StudentInfoManage.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<StudentInfoManageResource> L
+@inherits AbpCrudPageBase<IStudentAppService, StudentDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateStudentDto>
+@inject AbpBlazorMessageLocalizerHelper<StudentInfoManageResource> LH
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h2>@L["StudentsInfo"]</h2>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Color.Primary"
+                        Clicked="OpenCreateModalAsync">@L["NewStudent"]</Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <DataGrid TItem="StudentDto"
+                  Data="Entities"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+            <DataGridEntityActionsColumn TItem="StudentDto" @ref="@EntityActionsColumn">
+                <DisplayTemplate>
+                    <EntityActions TItem="StudentDto" EntityActionsColumn="@EntityActionsColumn">
+                        <EntityAction TItem="StudentDto"
+                                      Text="@L["Edit"]"
+                                      Clicked="() => OpenEditModalAsync(context)" />
+                        <EntityAction TItem="StudentDto"
+                                      Text="@L["Delete"]"
+                                      Clicked="() => DeleteEntityAsync(context)"
+                                      ConfirmationMessage="() => GetDeleteConfirmationMessage(context)" />
+
+                    </EntityActions>
+                </DisplayTemplate>
+            </DataGridEntityActionsColumn>
+
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.Stu_Name)"
+                                Caption="@L["Name"]">
+                    
+                </DataGridColumn>
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.Stu_Major)"
+                                Caption="@L["Major"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:Major:{(int)context.Stu_Major}"]
+                    </DisplayTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.Stu_Grade)"
+                                Caption="@L["Grade"]">
+                </DataGridColumn>
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.Stu_Class)"
+                                Caption="@L["Class"]">
+                </DataGridColumn>
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.Stu_BirthDate)"
+                                Caption="@L["BirthDate"]">
+                    <DisplayTemplate>
+                        @context.Stu_BirthDate.ToShortDateString()
+                    </DisplayTemplate>
+                </DataGridColumn>
+              
+                <DataGridColumn TItem="StudentDto"
+                                Field="@nameof(StudentDto.CreationTime)"
+                                Caption="@L["CreationTime"]">
+                    <DisplayTemplate>
+                        @context.CreationTime.ToLongDateString()
+                    </DisplayTemplate>
+                </DataGridColumn>
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+<Modal @ref="@CreateModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["NewStudent"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewEntity.Stu_Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    
+                    <Field>
+                        <FieldLabel>@L["Major"]</FieldLabel>
+                        <Select TValue="Major" @bind-SelectedValue="@NewEntity.Stu_Major">
+                            @foreach (int majorValue in Enum.GetValues(typeof(Major)))
+                            {
+                                <SelectItem TValue="Major" Value="@((Major)majorValue)">
+                                    @L[$"Enum:Major:{majorValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    <Validation MessageLocalizer="@LH.Localize">
+                                            <Field>
+                                                <FieldLabel>@L["Grade"]</FieldLabel>
+                                                <TextEdit @bind-Text="@NewEntity.Stu_Grade">
+                                                    <Feedback>
+                                                        <ValidationError/>
+                                                    </Feedback>
+                                                </TextEdit>
+                                            </Field>
+                                        </Validation>
+                                        
+                                          <Validation MessageLocalizer="@LH.Localize">
+                                                                <Field>
+                                                                    <FieldLabel>@L["Class"]</FieldLabel>
+                                                                    <TextEdit @bind-Text="@NewEntity.Stu_Class">
+                                                                        <Feedback>
+                                                                            <ValidationError/>
+                                                                        </Feedback>
+                                                                    </TextEdit>
+                                                                </Field>
+                                                            </Validation>
+                    <Field>
+                        <FieldLabel>@L["BirthDate"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="NewEntity.Stu_BirthDate"/>
+                    </Field>
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="CreateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="@EditModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@EditingEntity.Stu_Name</ModalTitle>
+                <CloseButton Clicked="CloseEditModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Stu_Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["Major"]</FieldLabel>
+                        <Select TValue="Major" @bind-SelectedValue="@EditingEntity.Stu_Major">
+                            @foreach (int majorValue in Enum.GetValues(typeof(Major)))
+                            {
+                                <SelectItem TValue="Major" Value="@((Major) majorValue)">
+                                    @L[$"Enum:Major:{majorValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Grade"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Stu_Grade">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    
+                      <Validation MessageLocalizer="@LH.Localize">
+                                            <Field>
+                                                <FieldLabel>@L["Class"]</FieldLabel>
+                                                <TextEdit @bind-Text="@EditingEntity.Stu_Class">
+                                                    <Feedback>
+                                                        <ValidationError/>
+                                                    </Feedback>
+                                                </TextEdit>
+                                            </Field>
+                                        </Validation>
+                    
+                    <Field>
+                        <FieldLabel>@L["BirthDate"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="EditingEntity.Stu_BirthDate"/>
+                    </Field>
+    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="UpdateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+
