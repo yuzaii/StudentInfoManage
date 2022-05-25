@@ -1,4 +1,7 @@
 ﻿@page "/Students"
+@attribute [Authorize(StudentInfoManagePermissions.Students.Default)]
+@using StudentInfoManage.Permissions
+@using Microsoft.AspNetCore.Authorization
 @using Volo.Abp.Application.Dtos
 @using StudentInfoManage.Students
 @using StudentInfoManage.Localization
@@ -33,9 +36,11 @@
                     <EntityActions TItem="StudentDto" EntityActionsColumn="@EntityActionsColumn">
                         <EntityAction TItem="StudentDto"
                                       Text="@L["Edit"]"
+                                      Visible=HasUpdatePermission
                                       Clicked="() => OpenEditModalAsync(context)" />
                         <EntityAction TItem="StudentDto"
                                       Text="@L["Delete"]"
+                                      Visible=HasDeletePermission
                                       Clicked="() => DeleteEntityAsync(context)"
                                       ConfirmationMessage="() => GetDeleteConfirmationMessage(context)" />
 
@@ -228,4 +233,18 @@
     </ModalContent>
 </Modal>
 
+@code
+{
+    public Students() // Constructor
+    {
+        CreatePolicyName = StudentInfoManagePermissions.Students.Create;
+        UpdatePolicyName = StudentInfoManagePermissions.Students.Edit;
+        DeletePolicyName = StudentInfoManagePermissions.Students.Delete;
+    }
+}
+@if (HasCreatePermission)
+{
+    <Button Color="Color.Primary"
+            Clicked="OpenCreateModalAsync">@L["NewBook"]</Button>
+}
 

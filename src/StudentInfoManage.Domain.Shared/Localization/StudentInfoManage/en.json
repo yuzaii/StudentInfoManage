@@ -25,6 +25,12 @@
     "Enum:Major:2": "ComputerScience",
     "Enum:Major:3": "MechanicalEngineering",
     "Enum:Major:4": "Adventure",
-    "Enum:Major:5": "Biography"
+    "Enum:Major:5": "Biography",
+    "Permission:StudentInfoManage": "StudentInfoManage",
+    "Permission:Students": "Students Management",
+    "Permission:Students.Create": "insert new students",
+    "Permission:Students.Edit": "Editing the students",
+    "Permission:Students.Delete": "Deleting the students"
+
   }
 }

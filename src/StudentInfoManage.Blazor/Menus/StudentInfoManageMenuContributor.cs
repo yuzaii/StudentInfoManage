@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StudentInfoManage.Localization;
+using StudentInfoManage.Permissions;
 using Volo.Abp.Account.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.UI.Navigation;
@@ -31,7 +32,7 @@ public class StudentInfoManageMenuContributor : IMenuContributor
         }
     }
 
-    private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
+    private async  Task ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
         var l = context.GetLocalizer<StudentInfoManageResource>();
 
@@ -45,22 +46,41 @@ public class StudentInfoManageMenuContributor : IMenuContributor
             )
         );
         
-        context.Menu.AddItem(
-            new ApplicationMenuItem(
-                "StudentInfoManage",
-                l["Menu:StudentInfoManage"],
-                icon: "fa fa-user"
-            ).AddItem(
-                new ApplicationMenuItem(
-                    "StudentInfoManage.Students",
-                    l["Menu:Students"],
-                    url: "/students"
-                )
-            )
+        // context.Menu.AddItem(
+        //     new ApplicationMenuItem(
+        //         "StudentInfoManage",
+        //         l["Menu:StudentInfoManage"],
+        //         icon: "fa fa-user"
+        //     ).AddItem(
+        //         new ApplicationMenuItem(
+        //             "StudentInfoManage.Students",
+        //             l["Menu:Students"],
+        //             url: "/students"
+        //         )
+        //     )
+        // );
+        
+        
+        var studentInfoManageMenu = new ApplicationMenuItem(
+            "StudentInfoManage",
+            l["Menu:StudentInfoManage"],
+            icon: "fa fa-user"
         );
 
+        context.Menu.AddItem(studentInfoManageMenu);
 
-        return Task.CompletedTask;
+//CHECK the PERMISSION
+        if (await context.IsGrantedAsync(StudentInfoManagePermissions.Students.Default))
+        {
+            studentInfoManageMenu.AddItem(new ApplicationMenuItem(
+                "StudentInfoManage.Students",
+                l["Menu:Students"],
+                url: "/students"
+            ));
+        }
+
+
+        // return Task.CompletedTask;
     }
 
     private Task ConfigureUserMenuAsync(MenuConfigurationContext context)

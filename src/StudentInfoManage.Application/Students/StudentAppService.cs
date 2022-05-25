@@ -1,4 +1,5 @@
 ﻿using System;
+using StudentInfoManage.Permissions;
 using StudentInfoManage.Stendents;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -18,7 +19,11 @@ namespace StudentInfoManage.Students
         public StudentAppService(IRepository<Student, Guid> repository)
             : base(repository)
         {
-
+            GetPolicyName = StudentInfoManagePermissions.Students.Default;
+            GetListPolicyName = StudentInfoManagePermissions.Students.Default;
+            CreatePolicyName = StudentInfoManagePermissions.Students.Create;
+            UpdatePolicyName = StudentInfoManagePermissions.Students.Edit;
+            DeletePolicyName = StudentInfoManagePermissions.Students.Delete;
         }
     }
 }
