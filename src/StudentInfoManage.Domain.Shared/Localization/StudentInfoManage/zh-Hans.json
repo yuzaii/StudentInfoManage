@@ -3,7 +3,7 @@
     "texts": {
       "Menu:Home": "首页",
       "Welcome": "欢迎",
-      "LongWelcomeMessage": "欢迎来到该应用程序. 这是一个基于ABP框架的启动项目. 有关更多信息, 请访问 abp.io.",
+      "LongWelcomeMessage": "欢迎来到该应用程序. 这是一个基于ABP框架的启动项目. 主要功能是学生信息的CURD操作以及相关的权限控制，有关更多信息, 请访问 abp.io.",
       "Menu:StudentInfoManage": "学生信息管理系统",
       "Menu:Students": "学生信息",
       "StudentsInfo": "学生信息管理",

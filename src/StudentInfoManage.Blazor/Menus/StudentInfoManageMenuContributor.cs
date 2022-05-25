@@ -64,7 +64,7 @@ public class StudentInfoManageMenuContributor : IMenuContributor
         var studentInfoManageMenu = new ApplicationMenuItem(
             "StudentInfoManage",
             l["Menu:StudentInfoManage"],
-            icon: "fa fa-user"
+            icon: "fa fa-users"
         );
 
         context.Menu.AddItem(studentInfoManageMenu);
